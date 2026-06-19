@@ -3,7 +3,6 @@ package com.coolweather.android;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 import com.coolweather.android.db.City;
 import com.coolweather.android.db.County;
@@ -30,6 +32,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import android.widget.ProgressBar;
 
 public class ChooseAreaFragment extends Fragment {
 
@@ -41,7 +44,7 @@ public class ChooseAreaFragment extends Fragment {
 
     public static final int LEVEL_COUNTY = 2;
 
-    private ProgressDialog progressDialog;
+    private AlertDialog progressDialog;
 
     private TextView titleText;
 
@@ -97,8 +100,9 @@ public class ChooseAreaFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // 把原来onActivityCreated里面全部代码原样粘贴到这里
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -108,19 +112,6 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
-                } else if (currentLevel == LEVEL_COUNTY) {
-                    String weatherId = countyList.get(position).getWeatherId();
-                    if (getActivity() instanceof MainActivity) {
-                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
-                        intent.putExtra("weather_id", weatherId);
-                        startActivity(intent);
-                        getActivity().finish();
-                    } else if (getActivity() instanceof WeatherActivity) {
-                        WeatherActivity activity = (WeatherActivity) getActivity();
-                        activity.drawerLayout.closeDrawers();
-                        activity.swipeRefresh.setRefreshing(true);
-                        activity.requestWeather(weatherId);
-                    }
                 }
             }
         });
@@ -212,7 +203,7 @@ public class ChooseAreaFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
-                    boolean result = false;
+                boolean result = false;
                 if ("province".equals(type)) {
                     result = Utility.handleProvinceResponse(responseText);
                 } else if ("city".equals(type)) {
@@ -256,9 +247,11 @@ public class ChooseAreaFragment extends Fragment {
      */
     private void showProgressDialog() {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("正在加载...");
-            progressDialog.setCanceledOnTouchOutside(false);
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setMessage("正在加载...");
+            builder.setView(new ProgressBar(requireContext()));
+            builder.setCancelable(false);
+            progressDialog = builder.create();
         }
         progressDialog.show();
     }
