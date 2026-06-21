@@ -49,6 +49,8 @@ dependencies {
     // Glide图片加载
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    implementation("androidx.preference:preference:1.2.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

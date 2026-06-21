@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/bing_pic_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <ScrollView
+        android:id="@+id/weather_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:fitsSystemWindows="true">
+
+            <!-- 顶部标题栏布局 -->
+            <include layout="@layout/title" />
+            <!-- 当前天气模块 -->
+            <include layout="@layout/now" />
+            <!-- 未来天气预报模块 -->
+            <include layout="@layout/forecast" />
+            <!-- 空气质量模块 -->
+            <include layout="@layout/aqi" />
+            <!-- 生活建议模块 -->
+            <include layout="@layout/suggestion" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>
