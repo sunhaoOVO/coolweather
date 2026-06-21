@@ -1,5 +1,6 @@
 package com.coolweather.android;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -115,14 +116,21 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_COUNTY) {
                     // 获取当前选中县的天气ID
                     String weatherId = countyList.get(position).getWeatherId();
-                    // 构建跳转Intent
-                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
-                    // 携带天气ID参数
-                    intent.putExtra("weather_id", weatherId);
-                    // 启动天气页面
-                    startActivity(intent);
-                    // 关闭当前MainActivity
-                    getActivity().finish();
+                    if (getActivity() instanceof MainActivity) {
+                        // 构建跳转Intent
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        // 携带天气ID参数
+                        intent.putExtra("weather_id", weatherId);
+                        // 启动天气页面
+                        startActivity(intent);
+                        // 关闭当前MainActivity
+                        getActivity().finish();
+                    } else if (getActivity() instanceof WeatherActivity) {
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefresh.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+                    }
                 }
             }
         });
